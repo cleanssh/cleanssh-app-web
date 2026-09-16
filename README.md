@@ -11,12 +11,14 @@
 
 ### 终端使用
 
-| | | |
-|---|---|---|
-| ![OpenCode](https://cleanssh.github.io/cleanssh-app-web/assets/screenshots/Screenshot_2026-09-07-06-54-04-396_dev.cleanssh.ssh.jpg) | ![Claude](https://cleanssh.github.io/cleanssh-app-web/assets/screenshots/Screenshot_2026-09-07-06-55-28-953_dev.cleanssh.ssh.jpg) | ![Codex](https://cleanssh.github.io/cleanssh-app-web/assets/screenshots/Screenshot_2026-09-07-06-56-41-593_dev.cleanssh.ssh.jpg) |
-| OpenCode | Claude | Codex |
-| ![Oh My Pi](https://cleanssh.github.io/cleanssh-app-web/assets/screenshots/Screenshot_2026-09-07-06-57-01-805_dev.cleanssh.ssh.jpg) | ![FreeBuf Login](https://cleanssh.github.io/cleanssh-app-web/assets/screenshots/Screenshot_2026-09-07-06-58-14-490_dev.cleanssh.ssh.jpg) | ![FreeBuf](https://cleanssh.github.io/cleanssh-app-web/assets/screenshots/Screenshot_2026-09-07-07-06-04-227_dev.cleanssh.ssh.jpg) |
-| Oh My Pi | FreeBuf Login | FreeBuf Logged In |
+| | |
+|---|---|
+| ![OpenCode](https://cleanssh.github.io/cleanssh-app-web/assets/screenshots/Screenshot_2026-09-07-06-54-04-396_dev.cleanssh.ssh.jpg) | ![Claude](https://cleanssh.github.io/cleanssh-app-web/assets/screenshots/Screenshot_2026-09-07-06-55-28-953_dev.cleanssh.ssh.jpg) |
+| OpenCode | Claude |
+| ![Codex](https://cleanssh.github.io/cleanssh-app-web/assets/screenshots/Screenshot_2026-09-07-06-56-41-593_dev.cleanssh.ssh.jpg) | ![Oh My Pi](https://cleanssh.github.io/cleanssh-app-web/assets/screenshots/Screenshot_2026-09-07-06-57-01-805_dev.cleanssh.ssh.jpg) |
+| Codex | Oh My Pi |
+| ![FreeBuf Login](https://cleanssh.github.io/cleanssh-app-web/assets/screenshots/Screenshot_2026-09-07-06-58-14-490_dev.cleanssh.ssh.jpg) | ![FreeBuf](https://cleanssh.github.io/cleanssh-app-web/assets/screenshots/Screenshot_2026-09-07-07-06-04-227_dev.cleanssh.ssh.jpg) |
+| FreeBuf Login | FreeBuf Logged In |
 
 ### 应用界面
 
