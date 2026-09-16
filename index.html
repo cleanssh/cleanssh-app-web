@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="zh" data-lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CleanSSH — Android SSH Client</title>
+  <meta name="description" content="CleanSSH - A secure, fully-featured SSH client for Android. Manage servers and run commands from your phone.">
+  <meta name="description" lang="zh" content="CleanSSH - 安卓上的安全 SSH 客户端。管理服务器、随时随地执行命令。">
+  <meta property="og:title" content="CleanSSH">
+  <meta property="og:description" content="A secure, fully-featured SSH client for Android">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <style>/* ===== Reset & Base ===== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --brand: #0B5F66;
+  --brand-light: #8AD4D9;
+  --brand-dark: #004F55;
+  --bg: #FFFFFF;
+  --bg-alt: #F7F7F7;
+  --text: #000000;
+  --text-muted: #5C5C5C;
+  --border: #E4E4E4;
+  --card-bg: #FFFFFF;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --radius: 12px;
+  --container: 1120px;
+  --nav-h: 60px;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + 16px);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Language Toggle ===== */
+[data-lang="en"] .zh,
+[data-lang="zh"] .en {
+  display: none !important;
+}
+
+/* ===== Container ===== */
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ===== Nav ===== */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-h);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+}
+
+.nav-inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.nav-logo {
+  width: 32px;
+  height: 32px;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.nav-link:hover {
+  color: var(--brand);
+  background: rgba(11, 95, 102, 0.06);
+}
+
+.lang-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.lang-toggle:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+/* ===== Hero ===== */
+.hero {
+  position: relative;
+  padding-top: calc(var(--nav-h) + 80px);
+  padding-bottom: 80px;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand) 50%, #0D7A83 100%);
+  z-index: -1;
+}
+
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 70% 30%, rgba(138, 212, 217, 0.15) 0%, transparent 60%);
+}
+
+.hero-content {
+  text-align: center;
+  color: #fff;
+}
+
+.hero-icon {
+  display: inline-block;
+  margin-bottom: 24px;
+}
+
+.hero-icon img {
+  width: 80px;
+  height: 80px;
+  filter: drop-shadow(0 4px 24px rgba(0,0,0,0.2));
+}
+
+.hero-title {
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+
+.hero-subtitle {
+  font-size: 22px;
+  font-weight: 500;
+  opacity: 0.95;
+  margin-bottom: 8px;
+}
+
+.hero-desc {
+  font-size: 16px;
+  opacity: 0.8;
+  max-width: 520px;
+  margin: 0 auto 32px;
+  line-height: 1.7;
+}
+
+.hero-version {
+  font-size: 13px;
+  opacity: 0.55;
+  margin-top: 24px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+  cursor: pointer;
+  border: none;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: #fff;
+  color: var(--brand);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.4);
+}
+
+.btn-outline:hover {
+  border-color: #fff;
+  background: rgba(255,255,255,0.1);
+}
+
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ===== Sections ===== */
+.section {
+  padding: 80px 0;
+}
+
+.section-alt {
+  background: var(--bg-alt);
+}
+
+.section-title {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 16px;
+  margin-bottom: 48px;
+}
+
+/* ===== Features Grid ===== */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.feature-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px 24px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow), 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--brand);
+  margin-bottom: 16px;
+}
+
+.feature-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.feature-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.feature-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ===== Screenshots ===== */
+.screenshots-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.screenshot-item {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+}
+
+.screenshot-item img {
+  width: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.screenshot-caption {
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
+/* ===== Security ===== */
+.security-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.security-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.security-icon {
+  width: 40px;
+  height: 40px;
+  color: var(--brand);
+  flex-shrink: 0;
+}
+
+.security-item h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.security-item p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ===== Tech Badges ===== */
+.tech-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.tech-badge {
+  display: inline-block;
+  padding: 8px 20px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* ===== CTA Section ===== */
+.section-cta {
+  background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand) 100%);
+  color: #fff;
+  text-align: center;
+}
+
+.cta-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.cta-desc {
+  font-size: 16px;
+  opacity: 0.85;
+  margin-bottom: 32px;
+}
+
+.section-cta .btn-primary {
+  background: #fff;
+  color: var(--brand);
+}
+
+.section-cta .btn-outline {
+  border-color: rgba(255,255,255,0.4);
+  color: #fff;
+}
+
+/* ===== Footer ===== */
+.footer {
+  padding: 32px 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-links a {
+  color: var(--brand);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 32px;
+  }
+
+  .hero-subtitle {
+    font-size: 18px;
+  }
+
+  .section {
+    padding: 56px 0;
+  }
+
+  .section-title {
+    font-size: 24px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .screenshots-grid {
+    grid-template-columns: 1fr;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .screenshot-item img {
+    aspect-ratio: 9 / 19.5;
+  }
+
+  .security-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-link {
+    display: none;
+  }
+
+  .cta-title {
+    font-size: 24px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .screenshots-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .screenshot-item img {
+    aspect-ratio: 9 / 19.5;
+  }
+}
+</style>
+  <!-- 51.la Analytics -->
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>LA.init({id:"3R7eg75zcki18e1g", ck:"3R7eg75zcki18e1g"})</script>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-brand">
+        <img class="nav-logo" src="assets/icon.svg" alt="CleanSSH">
+        <span>CleanSSH</span>
+      </a>
+      <div class="nav-actions">
+        <a href="#features" class="nav-link en">Features</a>
+        <a href="#features" class="nav-link zh">功能</a>
+        <a href="https://github.com/gtk/cleanssh-clone" class="nav-link" target="_blank" rel="noopener">GitHub</a>
+        <button class="lang-toggle" id="langToggle" aria-label="Toggle language">中/EN</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-bg"></div>
+    <div class="container hero-content">
+      <div class="hero-icon">
+        <img src="assets/icon.svg" alt="CleanSSH" width="80" height="80">
+      </div>
+      <h1 class="hero-title">
+        <span class="zh">CleanSSH</span>
+        <span class="en">CleanSSH</span>
+      </h1>
+      <p class="hero-subtitle zh">安卓上的专业 SSH 客户端，支持 AI Agent 远程操作</p>
+      <p class="hero-subtitle en">Professional SSH Client for Android with AI Agent Support</p>
+      <p class="hero-desc zh">安全、功能完整、开箱即用。在手机上管理服务器、执行命令。</p>
+      <p class="hero-desc en">Secure, fully featured, and ready to use. Manage servers and run commands from your phone.</p>
+      <div class="hero-buttons">
+        <a href="https://cleanssh.com/download/com.cleanssh.app" class="btn btn-primary">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3v10m0 0l-3-3m3 3l3-3M4 14h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="zh">下载 APK</span>
+          <span class="en">Download APK</span>
+        </a>
+        <a href="https://github.com/cleanssh/cleanssh-app-web" class="btn btn-outline" target="_blank">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2C5.58 2 2 5.58 2 10c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0018 10c0-4.42-3.58-8-8-8z" fill="currentColor"/></svg>
+          GitHub
+        </a>
+      </div>
+      <p class="hero-version zh">当前版本 v1.0 · 适用于 Android 8.0+</p>
+      <p class="hero-version en">Current version v1.0 · Requires Android 8.0+</p>
+    </div>
+  </header>
+
+  <!-- Features -->
+  <section id="features" class="section">
+    <div class="container">
+      <h2 class="section-title zh">核心功能</h2>
+      <h2 class="section-title en">Core Features</h2>
+      <p class="section-subtitle zh">为开发者和系统管理员打造的完整 SSH 工具箱，支持 AI Agent</p>
+      <p class="section-subtitle en">A complete SSH toolkit for developers and sysadmins with AI Agent support</p>
+
+      <div class="features-grid">
+        <!-- SSH Terminal -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 48 48" fill="none"><rect x="4" y="8" width="40" height="32" rx="4" stroke="currentColor" stroke-width="3"/><path d="M14 22l6 4-6 4" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><line x1="24" y1="30" x2="34" y2="30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+          </div>
+          <h3 class="feature-title zh">SSH 终端</h3>
+          <h3 class="feature-title en">SSH Terminal</h3>
+          <p class="feature-desc zh">VT100 完整终端仿真，支持可配置主题、字体大小和键盘选项。</p>
+          <p class="feature-desc en">Full VT100 terminal emulation with configurable themes, fonts, and keyboard options.</p>
+        </div>
+
+        <!-- AI Agent -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 48 48" fill="none"><rect x="8" y="12" width="32" height="24" rx="4" stroke="currentColor" stroke-width="3"/><circle cx="18" cy="24" r="3" fill="currentColor"/><circle cx="30" cy="24" r="3" fill="currentColor"/><path d="M18 32h12" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M24 8v4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="6" r="2" fill="currentColor"/></svg>
+          </div>
+          <h3 class="feature-title zh">AI Agent 支持</h3>
+          <h3 class="feature-title en">AI Agent Support</h3>
+          <p class="feature-desc zh">通过 SSH 远程运行 OpenCode、Claude、Codex 等 AI 编码工具。</p>
+          <p class="feature-desc en">Run AI coding tools like OpenCode, Claude, Codex remotely via SSH.</p>
+        </div>
+
+        <!-- Connection Management -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="16" r="6" stroke="currentColor" stroke-width="3"/><path d="M12 38c0-6.63 5.37-12 12-12s12 5.37 12 12" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M30 14l4 4m0 0l4-4m-4 4V8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="feature-title zh">连接管理</h3>
+          <h3 class="feature-title en">Connection Manager</h3>
+          <p class="feature-desc zh">地址簿管理常用连接，快速连接一键触达，支持 SSH 跳板链。</p>
+          <p class="feature-desc en">Address book for saved connections, one-tap quick connect, and SSH jump host chains.</p>
+        </div>
+
+        <!-- Port Forwarding -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 48 48" fill="none"><circle cx="12" cy="24" r="6" stroke="currentColor" stroke-width="3"/><circle cx="36" cy="24" r="6" stroke="currentColor" stroke-width="3"/><path d="M18 24h12" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M28 20l4 4-4 4" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="feature-title zh">端口转发</h3>
+          <h3 class="feature-title en">Port Forwarding</h3>
+          <p class="feature-desc zh">本地、远程和 SOCKS5 动态转发。</p>
+          <p class="feature-desc en">Local, remote, and SOCKS5 dynamic forwarding.</p>
+        </div>
+
+        <!-- Snippets -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 48 48" fill="none"><rect x="6" y="6" width="36" height="36" rx="4" stroke="currentColor" stroke-width="3"/><path d="M16 18l-4 4 4 4" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 18l4 4-4 4" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><line x1="22" y1="34" x2="26" y2="14" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+          </div>
+          <h3 class="feature-title zh">代码片段</h3>
+          <h3 class="feature-title en">Snippets</h3>
+          <p class="feature-desc zh">保存常用命令，会话中一键执行，重连时自动运行。</p>
+          <p class="feature-desc en">Save frequently used commands, execute with one tap, auto-run on reconnect.</p>
+        </div>
+
+        <!-- TOTP -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 48 48" fill="none"><rect x="10" y="6" width="28" height="36" rx="4" stroke="currentColor" stroke-width="3"/><circle cx="24" cy="30" r="6" stroke="currentColor" stroke-width="3"/><path d="M24 24v-6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M20 16h8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+          </div>
+          <h3 class="feature-title zh">TOTP 验证码</h3>
+          <h3 class="feature-title en">TOTP Authenticator</h3>
+          <p class="feature-desc zh">内置 TOTP 动态验证码，支持 otpauth:// 导入，无需额外应用。</p>
+          <p class="feature-desc en">Built-in TOTP authenticator with otpauth:// import support. No extra app needed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots: Terminal -->
+  <section class="section section-alt">
+    <div class="container">
+      <h2 class="section-title zh">终端使用</h2>
+      <h2 class="section-title en">Terminal Usage</h2>
+      <p class="section-subtitle zh">在手机上运行 OpenCode、Claude、Codex 等 AI 编码工具</p>
+      <p class="section-subtitle en">Run OpenCode, Claude, Codex, and more AI coding tools from your phone</p>
+
+      <div class="screenshots-grid">
+        <div class="screenshot-item">
+          <img src="assets/screenshots/Screenshot_2026-09-07-06-54-04-396_dev.cleanssh.ssh.jpg" alt="OpenCode running in terminal" loading="lazy">
+          <div class="screenshot-caption">
+            <span class="zh">运行 OpenCode</span>
+            <span class="en">OpenCode</span>
+          </div>
+        </div>
+        <div class="screenshot-item">
+          <img src="assets/screenshots/Screenshot_2026-09-07-06-55-28-953_dev.cleanssh.ssh.jpg" alt="Claude model selection" loading="lazy">
+          <div class="screenshot-caption">
+            <span class="zh">Claude 模型选择</span>
+            <span class="en">Claude</span>
+          </div>
+        </div>
+        <div class="screenshot-item">
+          <img src="assets/screenshots/Screenshot_2026-09-07-06-56-41-593_dev.cleanssh.ssh.jpg" alt="OpenAI Codex CLI" loading="lazy">
+          <div class="screenshot-caption">
+            <span class="zh">OpenAI Codex</span>
+            <span class="en">Codex</span>
+          </div>
+        </div>
+        <div class="screenshot-item">
+          <img src="assets/screenshots/Screenshot_2026-09-07-06-57-01-805_dev.cleanssh.ssh.jpg" alt="Oh My Pi terminal" loading="lazy">
+          <div class="screenshot-caption">
+            <span class="zh">运行 Oh My Pi</span>
+            <span class="en">Oh My Pi</span>
+          </div>
+        </div>
+        <div class="screenshot-item">
+          <img src="assets/screenshots/Screenshot_2026-09-07-06-58-14-490_dev.cleanssh.ssh.jpg" alt="FreeBuf login screen" loading="lazy">
+          <div class="screenshot-caption">
+            <span class="zh">FreeBuf 登录页</span>
+            <span class="en">FreeBuf Login</span>
+          </div>
+        </div>
+        <div class="screenshot-item">
+          <img src="assets/screenshots/Screenshot_2026-09-07-07-06-04-227_dev.cleanssh.ssh.jpg" alt="FreeBuf logged in" loading="lazy">
+          <div class="screenshot-caption">
+            <span class="zh">FreeBuf 已登录</span>
+            <span class="en">FreeBuf Logged In</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots: App UI -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title zh">应用界面</h2>
+      <h2 class="section-title en">App Interface</h2>
+      <p class="section-subtitle zh">简洁现代的 Material 3 设计，底部导航一键切换</p>
+      <p class="section-subtitle en">Clean, modern Material 3 design with bottom navigation</p>
+
+      <div class="screenshots-grid">
+        <div class="screenshot-item">
+          <img src="assets/screenshots/Screenshot_2026-09-07-08-00-30-563_dev.cleanssh.ssh-edit.png" alt="Frequent connections list" loading="lazy">
+          <div class="screenshot-caption">
+            <span class="zh">常用连接</span>
+            <span class="en">Frequent Connections</span>
+          </div>
+        </div>
+        <div class="screenshot-item">
+          <img src="assets/screenshots/Screenshot_2026-09-07-08-00-50-788_dev.cleanssh.ssh-edit.png" alt="Port forwarding management" loading="lazy">
+          <div class="screenshot-caption">
+            <span class="zh">端口转发</span>
+            <span class="en">Port Forwarding</span>
+          </div>
+        </div>
+        <div class="screenshot-item">
+          <img src="assets/screenshots/Screenshot_2026-09-07-08-01-21-324_dev.cleanssh.ssh-edit.png" alt="Identity management" loading="lazy">
+          <div class="screenshot-caption">
+            <span class="zh">身份管理</span>
+            <span class="en">Identity Manager</span>
+          </div>
+        </div>
+        <div class="screenshot-item">
+          <img src="assets/screenshots/Screenshot_2026-09-07-08-01-33-526_dev.cleanssh.ssh-edit.png" alt="Settings and tools" loading="lazy">
+          <div class="screenshot-caption">
+            <span class="zh">我的</span>
+            <span class="en">Me</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title zh">安全保障</h2>
+      <h2 class="section-title en">Security First</h2>
+      <p class="section-subtitle zh">每一处细节都经过安全考量</p>
+      <p class="section-subtitle en">Every detail designed with security in mind</p>
+
+      <div class="security-grid">
+        <div class="security-item">
+          <svg class="security-icon" viewBox="0 0 40 40" fill="none"><path d="M20 4L6 10v8c0 9.55 5.97 18.48 14 20 8.03-1.52 14-10.45 14-20v-8L20 4z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M14 20l4 4 8-8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div>
+            <h4 class="zh">凭据加密</h4>
+            <h4 class="en">Encrypted Credentials</h4>
+            <p class="zh">密码和私钥使用 Android Keystore 加密存储</p>
+            <p class="en">Passwords and private keys encrypted with Android Keystore</p>
+          </div>
+        </div>
+        <div class="security-item">
+          <svg class="security-icon" viewBox="0 0 40 40" fill="none"><rect x="8" y="18" width="24" height="18" rx="3" stroke="currentColor" stroke-width="2.5"/><path d="M14 18v-4a6 6 0 1112 0v4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="20" cy="28" r="2" fill="currentColor"/></svg>
+          <div>
+            <h4 class="zh">应用锁</h4>
+            <h4 class="en">App Lock</h4>
+            <p class="zh">PIN 码保护，可配置自动锁定时间和失败次数限制</p>
+            <p class="en">PIN protection with configurable timeout and attempt limits</p>
+          </div>
+        </div>
+        <div class="security-item">
+          <svg class="security-icon" viewBox="0 0 40 40" fill="none"><rect x="6" y="10" width="28" height="20" rx="3" stroke="currentColor" stroke-width="2.5"/><circle cx="20" cy="20" r="4" stroke="currentColor" stroke-width="2.5"/><path d="M20 16v-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+          <div>
+            <h4 class="zh">截屏保护</h4>
+            <h4 class="en">Screenshot Protection</h4>
+            <p class="zh">防止截屏和录屏，保护敏感信息</p>
+            <p class="en">Prevent screen capture and recording to protect sensitive data</p>
+          </div>
+        </div>
+        <div class="security-item">
+          <svg class="security-icon" viewBox="0 0 40 40" fill="none"><path d="M20 6l-2 8h-6l5 4-2 8 5-4 5 4-2-8 5-4h-6l-2-8z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><circle cx="20" cy="28" r="6" stroke="currentColor" stroke-width="2.5"/></svg>
+          <div>
+            <h4 class="zh">主机密钥验证</h4>
+            <h4 class="en">Host Key Verification</h4>
+            <p class="zh">自动检测主机密钥变更，防止中间人攻击</p>
+            <p class="en">Automatic host key change detection to prevent MITM attacks</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pro Features -->
+  <section class="section section-alt">
+    <div class="container">
+      <h2 class="section-title zh">专业版功能</h2>
+      <h2 class="section-title en">Pro Features</h2>
+      <p class="section-subtitle zh">我们的目标是提供最佳的应用体验。为了支持开发，我们为高级用户提供可选的专业版功能。</p>
+      <p class="section-subtitle en">Our goal is to provide the best app experience. We offer optional Pro features for power users to support development.</p>
+
+      <div class="pro-table-wrapper" style="overflow-x:auto;margin:0 auto;max-width:700px;">
+        <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+          <thead>
+            <tr style="background:#0d9488;color:#fff;">
+              <th style="padding:14px 20px;text-align:left;font-weight:600;" class="zh">功能</th>
+              <th style="padding:14px 20px;text-align:left;font-weight:600;" class="en">Feature</th>
+              <th style="padding:14px 20px;text-align:center;font-weight:600;">Free</th>
+              <th style="padding:14px 20px;text-align:center;font-weight:600;">Pro</th>
+            </tr>
+          </thead>
+          <tbody id="pro-features-body">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Purchase -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title zh">购买专业版</h2>
+      <h2 class="section-title en">Purchase Pro</h2>
+      <p class="section-subtitle zh">扫描二维码，激活码将发送到邮箱</p>
+      <p class="section-subtitle en">Scan QR code, activation code will be sent to your email</p>
+
+      <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:16px;padding:30px;box-shadow:0 4px 20px rgba(0,0,0,0.08);text-align:center;">
+        <p style="font-size:0.95em;color:#666;margin-bottom:20px;" class="zh">专业版当前价格为 ¥10。请扫描下方二维码，在备注中填写邮箱地址以接收激活码。</p>
+        <p style="font-size:0.95em;color:#666;margin-bottom:20px;" class="en">Pro version is ¥10. Scan the QR code below and include your email in the notes to receive the activation code.</p>
+        <img src="assets/qr_code.png" alt="Payment QR Code" style="max-width:200px;border-radius:8px;margin:16px 0;">
+        <div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-top:20px;text-align:left;">
+          <div style="flex:1;min-width:200px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <span style="background:#0d9488;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85em;flex-shrink:0;">1</span>
+              <div>
+                <strong class="zh">保存二维码到相册</strong>
+                <strong class="en">Save QR Code</strong>
+                <p style="font-size:0.85em;color:#888;margin:2px 0 0;" class="zh">点击二维码图片，保存到相册。</p>
+                <p style="font-size:0.85em;color:#888;margin:2px 0 0;" class="en">Tap the QR code image and save it.</p>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <span style="background:#0d9488;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85em;flex-shrink:0;">2</span>
+              <div>
+                <strong class="zh">扫描微信二维码支付</strong>
+                <strong class="en">Scan & Pay via WeChat</strong>
+                <p style="font-size:0.85em;color:#888;margin:2px 0 0;" class="zh">输入 ¥10 作为支付金额。</p>
+                <p style="font-size:0.85em;color:#888;margin:2px 0 0;" class="en">Enter ¥10 as the payment amount.</p>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <span style="background:#0d9488;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85em;flex-shrink:0;">3</span>
+              <div>
+                <strong class="zh">在备注中填写邮箱</strong>
+                <strong class="en">Include Email in Notes</strong>
+                <p style="font-size:0.85em;color:#888;margin:2px 0 0;" class="zh">确保邮箱地址准确无误，能够接收邮件。</p>
+                <p style="font-size:0.85em;color:#888;margin:2px 0 0;" class="en">Make sure your email is correct and can receive messages.</p>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="background:#0d9488;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85em;flex-shrink:0;">4</span>
+              <div>
+                <strong class="zh">在 App 中提交邮箱</strong>
+                <strong class="en">Submit Email in App</strong>
+                <p style="font-size:0.85em;color:#888;margin:2px 0 0;" class="zh">点击下载按钮，在 App 中提交您的邮箱地址，等待管理员审核。</p>
+                <p style="font-size:0.85em;color:#888;margin:2px 0 0;" class="en">Click the download button, submit your email in the app, and wait for admin approval.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#fef9c3;border:1px solid #fde68a;border-radius:8px;padding:14px;margin-top:24px;text-align:left;">
+          <strong style="color:#92400e;" class="zh">别忘了在备注中填写邮箱</strong>
+          <strong style="color:#92400e;" class="en">Don't Forget to Include Your Email</strong>
+          <p style="font-size:0.85em;color:#92400e;margin:4px 0 0;" class="zh">激活码只会发送到此邮箱；如果未收到，请同时检查垃圾邮件文件夹。</p>
+          <p style="font-size:0.85em;color:#92400e;margin:4px 0 0;" class="en">The activation code will only be sent to this email. If you don't receive it, please check your spam folder.</p>
+        </div>
+        <p style="margin-top:16px;font-size:0.9em;color:#666;"><span class="zh">联系方式：</span><span class="en">Contact: </span><a href="https://weixin.qq.com/" style="color:#0d9488;text-decoration:none;font-weight:600;">WeChat cleanssh</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Stack -->
+  <section class="section section-alt">
+    <div class="container">
+      <h2 class="section-title zh">技术栈</h2>
+      <h2 class="section-title en">Built With</h2>
+      <div class="tech-badges">
+        <span class="tech-badge">JSch</span>
+        <span class="tech-badge">Termux Terminal</span>
+        <span class="tech-badge">Material 3</span>
+        <span class="tech-badge">ORMLite</span>
+        <span class="tech-badge">Android SDK 34</span>
+        <span class="tech-badge">Java 17</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section section-cta">
+    <div class="container">
+      <h2 class="cta-title zh">开始使用 CleanSSH</h2>
+      <h2 class="cta-title en">Get Started with CleanSSH</h2>
+      <p class="cta-desc zh">免费下载，开箱即用，欢迎反馈问题和建议。</p>
+      <p class="cta-desc en">Free to download, ready to use. Bug reports and suggestions welcome.</p>
+      <div class="hero-buttons">
+        <a href="https://cleanssh.com/download/com.cleanssh.app" class="btn btn-primary">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3v10m0 0l-3-3m3 3l3-3M4 14h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="zh">下载 APK</span>
+          <span class="en">Download APK</span>
+        </a>
+        <a href="https://github.com/cleanssh/cleanssh-app-web" class="btn btn-outline" target="_blank">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2C5.58 2 2 5.58 2 10c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0018 10c0-4.42-3.58-8-8-8z" fill="currentColor"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p class="zh">&copy; 2026 CleanSSH &mdash; 闭源项目</p>
+      <p class="en">&copy; 2026 CleanSSH &mdash; Closed Source</p>
+      <p class="footer-links">
+        <a href="javascript:void(0)" class="zh" style="opacity:0.5;cursor:not-allowed">问题反馈</a>
+        <a href="javascript:void(0)" class="en" style="opacity:0.5;cursor:not-allowed">Report Issues</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>(function () {
+  'use strict';
+
+  var STORAGE_KEY = 'cleanssh-lang';
+
+  function getLang() {
+    var stored = localStorage.getItem(STORAGE_KEY);
+    if (stored === 'zh' || stored === 'en') return stored;
+    var nav = navigator.language || '';
+    return nav.indexOf('zh') === 0 ? 'zh' : 'en';
+  }
+
+  function setLang(lang) {
+    document.documentElement.setAttribute('data-lang', lang);
+    localStorage.setItem(STORAGE_KEY, lang);
+  }
+
+  // Init
+  setLang(getLang());
+
+  // Pro features table
+  var featuresZh = [
+    ['下载文件', false], ['上传文件', false], ['发送图片', false],
+    ['HTTP 共享', false], ['代码片段', false], ['端口转发', false],
+    ['认证器', false], ['备份', false], ['恢复', false],
+    ['连接级别主题与字体', false]
+  ];
+  var featuresEn = [
+    ['Download Files', false], ['Upload Files', false], ['Send Images', false],
+    ['HTTP Sharing', false], ['Code Snippets', false], ['Port Forwarding', false],
+    ['Authenticator', false], ['Backup', false], ['Restore', false],
+    ['Per-Connection Theme & Font', false]
+  ];
+
+  var freeIcon = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#ddd" stroke-width="1.5"/><line x1="6" y1="6" x2="14" y2="14" stroke="#ddd" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  var proIcon = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" fill="#0d9488" stroke="#0d9488" stroke-width="1.5"/><path d="M6 10l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function renderFeatures(features, isZh) {
+    var tbody = document.getElementById('pro-features-body');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    features.forEach(function(f) {
+      var tr = document.createElement('tr');
+      tr.style.borderBottom = '1px solid #f1f5f9';
+      tr.innerHTML = '<td style="padding:12px 20px;font-weight:500;">' + f[0] + '</td>'
+        + '<td style="padding:12px 20px;text-align:center;">' + freeIcon + '</td>'
+        + '<td style="padding:12px 20px;text-align:center;">' + proIcon + '</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  function updateProFeatures() {
+    var lang = document.documentElement.getAttribute('data-lang') || 'zh';
+    renderFeatures(lang === 'zh' ? featuresZh : featuresEn, lang === 'zh');
+  }
+
+  updateProFeatures();
+  var langBtn = document.getElementById('langToggle');
+  if (langBtn) {
+    langBtn.addEventListener('click', function () {
+      setTimeout(updateProFeatures, 10);
+    });
+  }
+
+  // Toggle
+  var btn = document.getElementById('langToggle');
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var current = document.documentElement.getAttribute('data-lang');
+      setLang(current === 'zh' ? 'en' : 'zh');
+    });
+  }
+
+  // Scroll-triggered fade-in
+  var cards = document.querySelectorAll('.feature-card, .security-item, .screenshot-placeholder, .tech-badge');
+  cards.forEach(function (el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  });
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  cards.forEach(function (el) {
+    observer.observe(el);
+  });
+
+  // Nav background on scroll
+  var nav = document.querySelector('.nav');
+  window.addEventListener('scroll', function () {
+    if (window.scrollY > 10) {
+      nav.style.borderBottomColor = 'rgba(0,0,0,0.08)';
+    } else {
+      nav.style.borderBottomColor = '';
+    }
+  });
+})();
+</script>
+</body>
+</html>
