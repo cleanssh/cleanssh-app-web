@@ -38,6 +38,29 @@
 - Snippets
 - TOTP 认证
 
+## 专业版功能
+
+| 功能 | 免费版 | 专业版 |
+|------|--------|--------|
+| 下载文件 | ✗ | ✓ |
+| 上传文件 | ✗ | ✓ |
+| 发送图片 | ✗ | ✓ |
+| HTTP 共享 | ✗ | ✓ |
+| 代码片段 | ✗ | ✓ |
+| 端口转发 | ✗ | ✓ |
+| 认证器 | ✗ | ✓ |
+| 备份 | ✗ | ✓ |
+| 恢复 | ✗ | ✓ |
+| 连接级别主题与字体 | ✗ | ✓ |
+
+![专业版功能](https://cleanssh.github.io/cleanssh-app-web/assets/screenshots/pro-features.jpg)
+
+## 购买专业版
+
+扫描二维码，激活码将发送到邮箱。专业版当前价格为 ¥10。
+
+![购买专业版](https://cleanssh.github.io/cleanssh-app-web/assets/screenshots/pro-purchase.jpg)
+
 ## 系统要求
 
 - Android 8.0+
